@@ -27,6 +27,7 @@ public class LoginTest {
     public void trueLoginTest() throws InterruptedException {
         driver.get(Constants.N11_URL);
         driver.manage().window().maximize();
+        webForm.clickOnLoginLink();
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.n11.com/giris-yap");
         webForm.checkInputAreaNames();
         webForm.login();
@@ -37,31 +38,30 @@ public class LoginTest {
     public void falseLoginTest(){
         driver.get(Constants.N11_URL);
         driver.manage().window().maximize();
+        webForm.clickOnLoginLink();
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.n11.com/giris-yap");
         webForm.checkInputAreaNames();
         webForm.falseLogin();
-        driver.manage().deleteAllCookies();
-
     }
 
     @Test(dataProvider = "wrongMails", testName = "Go to login page and enter wrong formatted mails to mail to input area, check the error message.")
     public void errorControlForMail(String mail){
         driver.get(Constants.N11_URL);
         driver.manage().window().maximize();
+        webForm.clickOnLoginLink();
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.n11.com/giris-yap");
         webForm.popUpControl();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email"))).sendKeys(mail);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password"))).click();
         AssertJUnit.assertEquals(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#loginForm > div:nth-child(1) > div > div"))).getText(),"Lütfen geçerli bir e-posta adresi girin.");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email"))).clear();
-        driver.manage().deleteAllCookies();
-
     }
 
     @Test(dataProvider = "wrongPasswords", testName = "Go to login page and enter wrong formatted passwords to password input area, check the error message.")
     public void errorControlForPassword(String password){
         driver.get(Constants.N11_URL);
         driver.manage().window().maximize();
+        webForm.clickOnLoginLink();
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.n11.com/giris-yap");
         webForm.popUpControl();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".showPass"))).click();
@@ -75,8 +75,6 @@ public class LoginTest {
             AssertJUnit.assertEquals(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.errorMessage:nth-child(4) > div:nth-child(1)"))).getText(),"Girilen değer en az 6 karakter olmalıdır.");
         }
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("password"))).clear();
-        driver.manage().deleteAllCookies();
-
     }
 
 
@@ -84,26 +82,27 @@ public class LoginTest {
     public void forgotPasswordWithWrongMailsTest(String mail){
         driver.get(Constants.N11_URL);
         driver.manage().window().maximize();
+        webForm.clickOnLoginLink();
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.n11.com/giris-yap");
         webForm.checkForgotPassword();
+        webForm.captchaControl();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("forgottenUserEmail"))).sendKeys(mail);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sendLinkForPasswordBtn"))).click();
         AssertJUnit.assertEquals(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#forgotPasswordModalWrapper > div.popupContent > div > div > div > div > div"))).getText(),"Lütfen geçerli bir e-posta adresi girin.");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("forgottenUserEmail"))).clear();
-        driver.manage().deleteAllCookies();
 
     }
 
-    @Test( testName = "Go to login page and test forgot password function with empty input as mail address")
+    @Test(testName = "Go to login page and test forgot password function with empty input as mail address")
     public void forgotPasswordWithEmptyMailsTest(){
         driver.get(Constants.N11_URL);
         driver.manage().window().maximize();
+        webForm.clickOnLoginLink();
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.n11.com/giris-yap");
         webForm.checkForgotPassword();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("forgottenUserEmail"))).sendKeys(Constants.EMPTY_MAIL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sendLinkForPasswordBtn"))).click();
         AssertJUnit.assertEquals(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.errorText:nth-child(2)"))).getText(),"Lütfen e-posta adresinizi girin.");
-        driver.manage().deleteAllCookies();
 
     }
 
@@ -111,15 +110,15 @@ public class LoginTest {
     public void forgotPasswordWithTrueMailsTest(String mail){
         driver.get(Constants.N11_URL);
         driver.manage().window().maximize();
+        webForm.clickOnLoginLink();
         Assert.assertEquals(driver.getCurrentUrl(), "https://www.n11.com/giris-yap");
         webForm.checkForgotPassword();
+        webForm.captchaControl();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("forgottenUserEmail"))).sendKeys(mail);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sendLinkForPasswordBtn"))).click();
         AssertJUnit.assertEquals(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".sendPassword > div:nth-child(1) > h3:nth-child(2)"))).getText(),"Şifre yenileme linki, e-posta adresinize gönderildi.");
         AssertJUnit.assertEquals(wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".sendPassword > div:nth-child(1) > div:nth-child(3)"))).getText(),"Lütfen e-posta kutunuzu kontrol edin.");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a.closePopup"))).click();
-        driver.manage().deleteAllCookies();
-
     }
 
     @DataProvider(name = "wrongMails")

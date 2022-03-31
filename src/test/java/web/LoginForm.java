@@ -13,6 +13,11 @@ public class LoginForm extends PageObject {
         super(driver);
     }
 
+    public void clickOnLoginLink(){
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#header > div > div > div.hMedMenu > div.customMenu > div.myAccountHolder.customMenuItem.withLocalization > div > div > a.btnSignIn"))).click();
+    }
+
     public void login() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         popUpControl();
@@ -74,7 +79,19 @@ public class LoginForm extends PageObject {
         }
         catch (NoSuchElementException ignored){
         }
-
     }
+
+    public void captchaControl(){
+        try {
+            if (driver.findElement(By.id("captchaImage")).isDisplayed()) {
+                driver.findElement(By.cssSelector("#forgotPasswordModalWrapper > div:nth-child(1) > span:nth-child(2)")).isDisplayed();
+            }
+        }
+        catch (Exception e){
+            System.out.println("CAPTCHA SEBEBIYLE TEST ŞU AN YAPILAMADI.");
+        }
+    }
+
+
 
 }
